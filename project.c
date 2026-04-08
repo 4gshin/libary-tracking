@@ -87,7 +87,7 @@ void returnBook(int id) {
     while (temp != NULL) {
         if (temp->id == id) {
             if (temp->isBorrowed == 0) {
-                printf("\nThis book is already in the libary!\n");
+                printf("\nThis book is already in the library!\n");
             } else {
                 temp->isBorrowed = 0;
                 printf("\n'%s' has been successfully returned!\n", temp->title);
@@ -105,7 +105,7 @@ void removeBook(int id) {
     struct Book* temp = head, *prev = NULL;
 
     if (temp == NULL) {
-        printf("\nLibary is empty!\n");
+        printf("\nLibrary is empty!\n");
         return;
     }
     if (temp != NULL && temp->id == id) {
@@ -127,9 +127,48 @@ void removeBook(int id) {
     printf("\nBook with ID %d has been removed.\n", id);
 }
 
-void sortBook(int id) {
- 
+ //Sort Books
+ void sortBooks(){
+    int swapped;
+    struct Book* ptr1;
+    struct Book* lptr = NULL;
+
+    if (head == NULL) 
+        return;
     
+    do {
+        swapped = 0;
+        ptr1 = head;
+
+        while (ptr1->next != lptr) {
+            if (ptr1->id > ptr1->next->id) {
+                int tempId = ptr1->id;
+                char tempTitle[100];
+                char tempAuthor[50];
+                int tempBorrowed;
+
+                strcpy(tempTitle, ptr1->title);
+                strcpy(tempAuthor, ptr1->author);
+                tempBorrowed = ptr1->isBorrowed;
+
+                ptr1->id = ptr1->next->id;
+                strcpy(ptr1->title, ptr1->next->title);
+                strcpy(ptr1->author, ptr1->next->author);
+                ptr1->isBorrowed = ptr1->next->isBorrowed;
+
+                ptr1->next->id = tempId;
+                strcpy(ptr1->next->title, tempTitle);
+                strcpy(ptr1->next->author, tempAuthor);
+                ptr1->next->isBorrowed = tempBorrowed;
+
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1;
+    } while (swapped);
+    printf("\nBooks sorted by ID successfully!\n");
+
 }
  
 
@@ -145,6 +184,7 @@ int main() {
     printf("4. Borrow Book\n");
     printf("5. Return Book\n");
     printf("6. Remove Book\n");
+    printf("7. Sort Books by ID\n");
     printf("0. Exit\n");
     printf("\nEnter your choice: ");
     scanf("%d", &choice);
@@ -186,6 +226,10 @@ int main() {
             printf("\nEnter book ID to remove: ");
             scanf("%d", &id);
             removeBook(id);
+            break;
+        case 7:
+            sortBooks();
+            displayBooks();
             break;
 
         default:
